@@ -1,0 +1,89 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:component-scan
+		base-package="com.userController" />
+	<context:component-scan
+		base-package="com.testIocScopes" />
+
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+
+			<mvc:mapping path="/*"/>
+			<mvc:exclude-mapping path="/loginuser" />
+			<mvc:exclude-mapping path="/Home" />
+			<mvc:exclude-mapping path="/logout" />
+			<mvc:exclude-mapping path="/Register" />
+			<mvc:exclude-mapping path="/testIoc" />
+			<bean
+				class="com.session.interceptors.SessionValidationIntedceptors" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+	<bean class="com.userServices.OrderManagementServices"></bean>
+	<bean class="com.userServices.UserServices"></bean>
+
+	<!--through jdbc -->
+
+	<!-- <bean class ="com.userDaoJdbcImpl.UserJdbcDao"></bean> <bean class="com.orderManagementDaoJdbcImpl.OrderManagementJdbcDao"></bean> -->
+
+	<!-- through hibernate -->
+
+	<bean class="com.userDao.UserDao"></bean>
+	<bean class="com.userDao.OrderManagementDao"></bean>
+
+	<bean class="com.testIocScopes.TestIocPojo" scope="prototype">
+
+		<property name="studentcollege" value="vikas"></property>
+		<property name="studentcity" value="hyderabad"></property>
+		<property name="passport" ref="passportobj"></property>
+		<property name="aadhar" ref="aadharobj"></property>
+		
+		
+		<!-- <property name="aadhar" ref="aadharobj"></property>
+		<property name="subjects">
+			<list>
+				<value>Maths</value>
+				<value>Physics</value>
+				<value>Chemistry</value>
+			</list>
+		</property> -->
+	</bean>
+	<bean id="passportobj" class="com.testIocScopes.Passport" scope="prototype"></bean>
+	
+	<bean  id="aadharobj"  class="com.testIocScopes.AadharCard" scope="prototype">
+	
+	<constructor-arg   value="1234"/>
+	<constructor-arg  value="1994"/>
+	
+	</bean>
+	
+	<bean id="brl" class="com.testIocScopes.College" scope="prototype">
+	<property name="clgname" value="Brilliant"></property>
+	</bean>
+	
+	<bean id="vks" class="com.testIocScopes.College" scope="prototype">
+	<property name="clgname" value="vikas"></property>
+	</bean>
+
+</beans>
